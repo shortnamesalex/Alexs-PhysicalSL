@@ -15,7 +15,7 @@ vec3 bloom(vec3 color, vec2 coord){
 	
 	#ifdef DirtyLens
 	float bAR = 1;
-	float dirt = texture2D(depthtex2,(coord-0.5)/vec2(max(bAR/aspectRatio,1.0),max(aspectRatio/bAR,1.0))+0.5).r * length(blur6 / (0.7 * blur6));
+	float dirt = texture2D(depthtex2,(coord-0.5)/vec2(max(bAR/aspectRatio,1.0),max(aspectRatio/bAR,1.0))+0.5).r * length(blur6 / (1.25 * blur6));
 	blur3 *= dirt + 0.5;
 	blur4 *= dirt * 1.0 + 1.0;
 	blur5 *= dirt * 2.0 + 1.0;
