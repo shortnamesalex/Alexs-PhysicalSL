@@ -47,7 +47,7 @@ vec3 getVolumetricRays(float pixeldepth0, float pixeldepth1, vec3 color, float d
 	dither = fract(dither + frameCounter/32.0);
 	#endif
 	
-	vec4 fragpos = gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, pixeldepth0, 2.0) * 2.0 - 1.0);
+	vec4 fragpos = gbufferProjectionInverse * (vec4(texcoord.x, texcoord.y, pixeldepth0, 1.0) * 2.0 - 1.0);
 	fragpos /= fragpos.w;
 	
 	float cosS = dot(normalize(fragpos.xyz), sunVec * (1.0 - 2.0 * float(timeAngle > 0.5325 && timeAngle < 0.9675)));
