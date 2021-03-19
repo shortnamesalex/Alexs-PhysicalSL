@@ -19,7 +19,7 @@
 
 
 float rayleigh_phase(float cosTheta) {
-    float phase = 0.8 * (1.4 + 0.5 * cosTheta);
+    float phase = 1.0 * (1.4 + 0.5 * cosTheta);
     phase *= rcp(pi*4);
   	return phase;
 }

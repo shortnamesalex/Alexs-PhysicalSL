@@ -17,8 +17,6 @@ varying vec2 texcoord;
 
 uniform int cloud_sunlight;
 
-uniform int worldTime;
-
 uniform float timeAngle;
 
 uniform float sunAngle;
@@ -50,5 +48,5 @@ void main(){
         light_vec[1] = -sun_vec;
 
     _skylight = atmos_approx(vec3(0.0, 1.0, 0.0), light_vec) * pi;
-    _sunlight = (worldTime>23000 || worldTime<12900) ? atmos_light(sun_vec) * sun_illum : atmos_light(-sun_vec) * moon_illum * vec3(0.4, 0.7, 1.3) * 1.3;
+    _sunlight = cloud_sunlight > 0.5 ? atmos_light(sun_vec) * sun_illum : atmos_light(-sun_vec) * moon_illum * vec3(0.4, 0.7, 1.3) * 1.3;
 }

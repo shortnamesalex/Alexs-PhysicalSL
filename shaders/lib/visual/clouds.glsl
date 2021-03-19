@@ -1,4 +1,4 @@
-#define CloudQuality 5	//[5 8]
+#define CloudQuality 8	//[5 8]
 #define CloudThickness 4 //[1 2 4 8 16]
 #define CloudAmount 11.0 //[13.0 12.0 11.0 10.0 9.0]
 #define CloudHeight 15.0 //[5.0 10.0 15.0 20.0 25.0]

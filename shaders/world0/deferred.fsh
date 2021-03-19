@@ -132,18 +132,18 @@ float cloud_phase(float cos_theta, float g) {
     return mix(a, b, 0.38) + 0.01 * g;
 }
 
-#define vcloud_samples 60   //[20 30 40 50 60 70 80 90 100]
+#define vcloud_samples 70   //[20 30 40 50 60 70 80 90 100]
 #define vcloud_alt 1e3      //[3e2 4e2 5e2 6e2 7e2 8e2 9e2 1e3 2e3 3e3 4e3]
-#define vcloud_depth 4e3    //[1e3 2e3 3e3 4e3 5e3 6e3 7e3 8e3]
+#define vcloud_depth 2e3    //[1e3 2e3 3e3 4e3 5e3 6e3 7e3 8e3]
 #define vcloud_clip 2e5
 
 #define vcloud_detail 1     //[0 1]
-#define vcloud_coverage 0.0 //[-0.5 -0.4 -0.3 -0.2 -0.1 0.0 0.1 0.2 0.3 0.4 0.5]
+#define vcloud_coverage 0.1 //[-0.5 -0.4 -0.3 -0.2 -0.1 0.0 0.1 0.2 0.3 0.4 0.5]
 
-const float vc_size         = 0.00062;
+const float vc_size         = 0.0010;
 const float vc_highedge     = vcloud_alt + vcloud_depth;
 
-float vcloud_time   = frametime * 0.2;
+float vcloud_time   = frametime * 0.5;
 
 float vcloud_shape(vec3 pos) {
     float altitude      = pos.y;
@@ -165,8 +165,8 @@ float vcloud_shape(vec3 pos) {
 
         coverage   *= fade_low;
         coverage   *= fade_high;
-        coverage   -= erode_low*0.25;
-        coverage   -= erode_high*0.7;
+        coverage   -= erode_low*1.0;
+        coverage   -= erode_high*0.8;
 
         coverage    = saturate(coverage * 1.1);
         
@@ -182,14 +182,14 @@ float vcloud_shape(vec3 pos) {
     float shape     = coverage;
     float slope     = sqrt(1.0 - saturate(shape));
 
-        pos.xy += shape * 0.5;
+        pos.xy += shape * 0.2;
     float n1        = value_3d(pos * 6.0) * 0.3 * wfade;
         shape      -= n1 * slope;   pos -= n1 * 0.5;
 
     if (shape <= 0.0) return 0.0;
 
     #if vcloud_detail >= 1
-        slope      = sqrt(1.0 - saturate(shape));
+        slope      = sqrt(1.1 - saturate(shape));
         shape      -= value_3d(pos * 24.0) * 0.15 * slope;
     #endif
 

@@ -1,4 +1,4 @@
-#define DOFStrength 8.00 //[1.00 2.00 4.00 8.00 16.00 32.00 64.00 128.00 256.00 512.00 1024.00]
+#define DOFStrength 4.00 //[1.00 2.00 4.00 8.00 16.00 32.00 64.00 128.00 256.00 512.00 1024.00]
 
 vec2 hqoffset[60] = vec2[60]  (  vec2( 0.0000, 0.2500 ),
 									vec2( -0.2165, 0.1250 ),
@@ -81,7 +81,7 @@ vec3 depthOfField(vec3 color){
 	
 	if (coc*0.015 > 1.0/max(viewWidth,viewHeight) && hand < 0.5){
 		for (int i = 0; i < 60; ++i) {
-			dof += texture2DLod(colortex0, texcoord.xy + hqoffset[i]*coc*0.015*vec2(1.0/aspectRatio,1.0),log2(viewHeight/180.0*aspectRatio/1.77777778)*coc).rgb;
+			dof += texture2DLod(colortex0, texcoord.xy + hqoffset[i]*coc*0.015*vec2(0.5/aspectRatio,1.5),log2(viewHeight/180.0*aspectRatio/1.77777778)*coc).rgb;
 		}
 		dof /= 60.0;
 	}

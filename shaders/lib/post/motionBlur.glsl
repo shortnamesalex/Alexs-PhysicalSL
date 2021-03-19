@@ -1,4 +1,4 @@
-#define MotionBlurStrength 1.00 //[0.25 0.50 0.75 1.00 1.25 1.50 1.75 2.00]
+#define MotionBlurStrength 0.25 //[0.25 0.50 0.75 1.00 1.25 1.50 1.75 2.00]
 
 vec3 motionBlur (vec3 color, float hand){
 	if (hand < 0.5){
