@@ -110,7 +110,7 @@ float waterH(vec3 pos, vec3 fpos) {
 	float noise = 0;
 
 	float mult = clamp((-dot(normalize(normal),normalize(fpos)))*8.0,0.0,1.0)/sqrt(sqrt(max(dist,4.0)));
-	float lacunarity = 1.0;
+	float lacunarity = 1.1;
 	float persistance = 1.0;
 	float weight = 0.0;
 	
