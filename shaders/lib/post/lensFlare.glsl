@@ -1,7 +1,7 @@
 float fovmult = gbufferProjection[1][1] / 1.37373871;
 
 float genLens(vec2 lightPos, float size, float dist,float rough){
-	return pow(clamp(max(1.0-length((texcoord.xy+(lightPos.xy*dist-0.5))*vec2(aspectRatio,1.0)/(size*fovmult)),0.0),0.0,1.0/rough)*rough,4.0);
+	return pow(clamp(max(1.0-length((texcoord.xy+(lightPos.xy*dist-0.5))*vec2(aspectRatio,1.0)/(size*fovmult)),0.0),0.0,1.0/rough)*rough,4.1);
 }
 
 float genMultLens(vec2 lightPos, float size, float dista, float distb){
@@ -32,7 +32,7 @@ float genRingLens(vec2 lightPos, float size, float dista, float distb){
 }
 
 float genAnaLens(vec2 lightPos){
-	return pow(max(1.0-length(pow(abs(texcoord.xy-lightPos.xy-0.5),vec2(0.5,0.8))*vec2(aspectRatio*0.175,2.0))*4.0/fovmult,0.0),2.2);
+	return pow(max(1.3-length(pow(abs(texcoord.xy-lightPos.xy-0.5),vec2(0.5,0.8))*vec2(aspectRatio*0.175,2.0))*4.0/fovmult,0.0),2.2);
 }
 
 vec3 getColor(vec3 color, float truepos){
@@ -54,32 +54,46 @@ vec3 genLensFlare(vec2 lightPos,float truepos,float visiblesun){
 	float visibilitya = getLensVisibilityA(lightPos);
 	float visibilityb = getLensVisibilityB(lightPos);
 	if (visibilityb > 0.001){
-		vec3 lensFlareA = genLens(lightPos,0.3,-0.45,1)*getColor(vec3(2.2, 1.2, 0.1),truepos)*0.07;
-			 lensFlareA+= genLens(lightPos,0.3,0.10,1)*getColor(vec3(2.2, 0.4, 0.1),truepos)*0.03;
-			 lensFlareA+= genLens(lightPos,0.3,0.30,1)*getColor(vec3(2.2, 0.1, 0.05),truepos)*0.04;
-			 lensFlareA+= genLens(lightPos,0.3,0.50,1)*getColor(vec3(2.2, 0.4, 2.5),truepos)*0.05;
-			 lensFlareA+= genLens(lightPos,0.3,0.70,1)*getColor(vec3(1.8, 0.4, 2.5),truepos)*0.06;
-			 lensFlareA+= genLens(lightPos,0.3,0.90,1)*getColor(vec3(0.1, 0.2, 2.5),truepos)*0.07;
+		vec3 lensFlareA = genLens(lightPos,0.3,-0.45,1)*getColor(vec3(2.2, 1.2, 0.1),truepos)*0.30;
+			 lensFlareA+= genLens(lightPos,0.3,0.10,1)*getColor(vec3(2.2, 0.4, 0.1),truepos)*0.30;
+			 lensFlareA+= genLens(lightPos,0.3,0.30,1)*getColor(vec3(2.2, 0.1, 0.05),truepos)*0.30;
+			 lensFlareA+= genLens(lightPos,0.3,0.50,1)*getColor(vec3(2.2, 0.4, 2.5),truepos)*0.30;
+			 lensFlareA+= genLens(lightPos,0.3,0.70,1)*getColor(vec3(1.8, 0.4, 2.5),truepos)*0.30;
+			 lensFlareA+= genLens(lightPos,0.3,0.1,1)*getColor(vec3(0.1, 0.2, 2.5),truepos)*0.30;
+			 lensFlareA+= genLens(lightPos,0.3,-1.1,1)*getColor(vec3(0.2, 0.3, 3.6),truepos)*0.30;
+			 lensFlareA+= genLens(lightPos,0.3,-1.29,1)*getColor(vec3(1.2, 1.3, 4.6),truepos)*0.30;
 			 
-		vec3 lensFlareB = genMultLens(lightPos,0.08,-0.28,-0.39)*getColor(vec3(2.5, 1.2, 0.1),truepos)*0.015;
-			 lensFlareB+= genMultLens(lightPos,0.08,-0.20,-0.31)*getColor(vec3(2.5, 0.5, 0.05),truepos)*0.010;
-			 lensFlareB+= genMultLens(lightPos,0.12,0.06,0.19)*getColor(vec3(2.5, 0.1, 0.05),truepos)*0.020;
-			 lensFlareB+= genMultLens(lightPos,0.12,0.15,0.28)*getColor(vec3(1.8, 0.1, 1.2),truepos)*0.015;
-			 lensFlareB+= genMultLens(lightPos,0.12,0.24,0.37)*getColor(vec3(1.0, 0.1, 2.5),truepos)*0.010;
+		vec3 lensFlareB = genMultLens(lightPos,0.08,-0.30,-0.39)*getColor(vec3(2.5, 1.2, 0.1),truepos)*0.30;
+			 lensFlareB+= genMultLens(lightPos,0.08,-0.20,-0.31)*getColor(vec3(2.5, 0.5, 0.05),truepos)*0.30;
+			 lensFlareB+= genMultLens(lightPos,0.12,0.06,0.19)*getColor(vec3(2.5, 0.1, 0.05),truepos)*0.30;
+			 lensFlareB+= genMultLens(lightPos,0.12,0.15,0.28)*getColor(vec3(1.8, 0.1, 1.2),truepos)*0.35;
+			 lensFlareB+= genMultLens(lightPos,0.12,0.5,0.37)*getColor(vec3(1.0, 0.1, 2.5),truepos)*0.30;
+			 		 
 			 
-		vec3 lensFlareC = genPointLens(lightPos,0.03,-0.55,0.5)*getColor(vec3(2.5, 1.6, 0.0),truepos)*0.20;
-			 lensFlareC+= genPointLens(lightPos,0.02,-0.4,0.5)*getColor(vec3(2.5, 1.0, 0.0),truepos)*0.15;
-			 lensFlareC+= genPointLens(lightPos,0.04,0.425,0.5)*getColor(vec3(2.5, 0.6, 0.6),truepos)*0.20;
-			 lensFlareC+= genPointLens(lightPos,0.02,0.6,0.5)*getColor(vec3(0.2, 0.6, 2.5),truepos)*0.15;
-			 lensFlareC+= genPointLens(lightPos,0.03,0.675,0.25)*getColor(vec3(0.7, 1.1, 3.0),truepos)*0.25;
-			 
-		vec3 lensFlareD = genRingLens(lightPos,0.22,0.44,0.46)*getColor(vec3(0.1, 0.35, 2.5),truepos);
-			 lensFlareD+= genRingLens(lightPos,0.15,0.98,0.99)*getColor(vec3(0.15, 0.4, 2.55),truepos)*2.5;
+		vec3 lensFlareC = genPointLens(lightPos,0.03,-0.55,0.5)*getColor(vec3(2.5, 1.6, 0.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.02,-0.4,0.5)*getColor(vec3(2.5, 1.0, 0.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.04,0.425,0.5)*getColor(vec3(2.5, 0.6, 0.6),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.04,-0.1,0.5)*getColor(vec3(0.7, 1.1, 3.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.04,0.1,0.5)*getColor(vec3(1.7, 2.1, 6.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.02,0.6,0.5)*getColor(vec3(0.2, 0.6, 2.5),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.03,0.675,0.25)*getColor(vec3(0.7, 1.1, 3.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.03,0.03,0.25)*getColor(vec3(0.9, 1.2, 5.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.03,-1.15,0.25)*getColor(vec3(0.9, 1.2, 5.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.03,-1.27,0.25)*getColor(vec3(0.9, 1.6, 5.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.03,-0.15,0.25)*getColor(vec3(0.9, 1.2, 5.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.03,-0.27,0.25)*getColor(vec3(0.9, 1.6, 5.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.03,-0.50,0.25)*getColor(vec3(0.9, 1.2, 5.0),truepos)*0.30;
+			 lensFlareC+= genPointLens(lightPos,0.03,-0.67,0.25)*getColor(vec3(0.9, 1.6, 5.0),truepos)*0.30;
+			  
+		vec3 lensFlareD = genRingLens(lightPos,0.42,0.50,0.56)*getColor(vec3(0.1, 0.35, 2.5),truepos);
+		     lensFlareD+= genRingLens(lightPos,0.62,0.50,0.56)*getColor(vec3(0.1, 0.35, 2.5),truepos)*2.5;
+	
 			 
 		vec3 lensFlareE = genAnaLens(lightPos)*getColor(vec3(0.3,0.7,1.0),truepos);
 
 		final = (((lensFlareA+lensFlareB)+(lensFlareC+lensFlareD))*visibilitya+lensFlareE*visibilityb)*pow(visiblesun,2.0)*(1.0-rainStrength);
 	}
+	
 	
 	return final;
 }
