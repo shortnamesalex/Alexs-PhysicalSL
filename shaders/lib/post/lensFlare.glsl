@@ -32,7 +32,7 @@ float genRingLens(vec2 lightPos, float size, float dista, float distb){
 }
 
 float genAnaLens(vec2 lightPos){
-	return pow(max(1.3-length(pow(abs(texcoord.xy-lightPos.xy-0.5),vec2(0.5,0.8))*vec2(aspectRatio*0.175,2.0))*4.0/fovmult,0.0),2.2);
+	return pow(max(1.4-length(pow(abs(texcoord.xy-lightPos.xy-0.5),vec2(0.5,0.8))*vec2(aspectRatio*0.1,2.0))*4.0/fovmult,0.0),1.6);
 }
 
 vec3 getColor(vec3 color, float truepos){
