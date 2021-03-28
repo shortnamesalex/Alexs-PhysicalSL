@@ -74,7 +74,7 @@ const int shadowMapResolution = 2048; //[1024 2048 3072 4096 8192]
 #define DirtyLens
 #define LensFlare
 #define LensFlareStrength 0.50 //[0.25 0.50 0.75 1.00 1.25 1.50 1.75 2.00]
-#define DOF
+//#define DOF
 #define MotionBlur
 
 #define LightShaft
