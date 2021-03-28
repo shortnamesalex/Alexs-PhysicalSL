@@ -53,7 +53,7 @@ const vec3 sun_illum    = vec3(sunIllum_r, sunIllum_g, sunIllum_b) * sunIllum_mu
 const vec3 moon_illum   = vec3(moonIllum_r, moonIllum_g, moonIllum_b) * moonIllum_mult;
 
 const float density_coeff = 0.55;
-const float horizon_offset = -0.04;
+const float horizon_offset = -0.05;
 
 float atmos_density(float x) {
     return density_coeff * rcp(pow(max(x - horizon_offset, 0.35e-3), 0.95));
