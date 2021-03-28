@@ -148,7 +148,7 @@ float vcloud_time   = frametime * 0.5;
 float vcloud_shape(vec3 pos) {
     float altitude      = pos.y;
 
-    float erode_low     = 1.0-sstep(altitude, vcloud_alt, vcloud_alt+vcloud_depth*0.13);
+    float erode_low     = 1.0-sstep(altitude, vcloud_alt, vcloud_alt+vcloud_depth*0.16);
     float erode_high    = sstep(altitude, vcloud_alt+vcloud_depth*0.16, vc_highedge);
     float fade_low      = sstep(altitude, vcloud_alt, vcloud_alt+vcloud_depth*0.075);
     float fade_high     = 1.0-sstep(altitude, vcloud_alt+vcloud_depth*0.65, vc_highedge);
