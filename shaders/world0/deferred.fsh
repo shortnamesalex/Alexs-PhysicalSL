@@ -68,6 +68,7 @@ uniform mat4 gbufferModelView;
 uniform sampler2D colortex0;
 uniform sampler2D depthtex0;
 uniform sampler2D noisetex;
+uniform sampler2D colortex15;
 
 #ifdef WorldTimeAnimation
 float frametime = float(worldTime)/20.0*AnimationSpeed;
@@ -115,6 +116,10 @@ float lin_step(float x, float low, float high) {
 vec3 noise_2d(vec2 pos) {
     return texture2D(noisetex, pos).xyz;
 }
+
+vec3 noise_2d_sqrcld(vec2 pos) {
+    return texture2D(colortex15, pos).xyz;
+}
 float value_3d(vec3 pos) {
     vec3 p  = floor(pos); 
     vec3 b  = fract(pos);
@@ -132,15 +137,33 @@ float cloud_phase(float cos_theta, float g) {
     return mix(a, b, 0.38) + 0.01 * g;
 }
 
+//#define SQUARE_CLOUDS
+
 #define vcloud_samples 70   //[20 30 40 50 60 70 80 90 100]
 #define vcloud_alt 1e3      //[3e2 4e2 5e2 6e2 7e2 8e2 9e2 1e3 2e3 3e3 4e3]
-#define vcloud_depth 2e3    //[1e3 2e3 3e3 4e3 5e3 6e3 7e3 8e3]
+
+#ifdef SQUARE_CLOUDS
+#define vcloud_depth 1e3
+#else 
+#define vcloud_depth 2e3    //[1e3 2e3 3e3 4e3 5e3 6e3 7e3 8e3] 
+#endif 
+
 #define vcloud_clip 2e5
 
+#ifdef SQUARE_CLOUDS
+#define vcloud_detail 0
+#else
 #define vcloud_detail 1     //[0 1]
+#endif
+
 #define vcloud_coverage 0.1 //[-0.5 -0.4 -0.3 -0.2 -0.1 0.0 0.1 0.2 0.3 0.4 0.5]
 
+#ifdef SQUARE_CLOUDS
+const float vc_size         = 0.00035;
+#else
 const float vc_size         = 0.0010;
+#endif
+
 const float vc_highedge     = vcloud_alt + vcloud_depth;
 
 float vcloud_time   = frametime * 0.5;
@@ -160,7 +183,11 @@ float vcloud_shape(vec3 pos) {
 
     float coverage_bias = 0.52 - wetness*0.3 - vcloud_coverage;
 
+    #ifdef SQUARE_CLOUDS
+    float coverage  = noise_2d_sqrcld(pos.xz*0.028).b;
+    #else
     float coverage  = noise_2d(pos.xz*0.028).b;
+    #endif
         coverage    = (coverage - coverage_bias) * rcp(1.0 - saturate(coverage_bias));
 
         coverage   *= fade_low;
