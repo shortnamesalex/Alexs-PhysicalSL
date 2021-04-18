@@ -68,6 +68,7 @@ uniform mat4 gbufferModelView;
 uniform sampler2D colortex0;
 uniform sampler2D depthtex0;
 uniform sampler2D noisetex;
+uniform sampler2D colortex15;
 
 #ifdef WorldTimeAnimation
 float frametime = float(worldTime)/20.0*AnimationSpeed;
@@ -115,6 +116,10 @@ float lin_step(float x, float low, float high) {
 vec3 noise_2d(vec2 pos) {
     return texture2D(noisetex, pos).xyz;
 }
+
+vec3 noise_2d_sqrcld(vec2 pos) {
+    return texture2D(colortex15, pos).xyz;
+}
 float value_3d(vec3 pos) {
     vec3 p  = floor(pos); 
     vec3 b  = fract(pos);
@@ -132,26 +137,46 @@ float cloud_phase(float cos_theta, float g) {
     return mix(a, b, 0.38) + 0.01 * g;
 }
 
+//#define SQUARE_CLOUDS
+
 #define vcloud_samples 70   //[20 30 40 50 60 70 80 90 100]
 #define vcloud_alt 1e3      //[3e2 4e2 5e2 6e2 7e2 8e2 9e2 1e3 2e3 3e3 4e3]
-#define vcloud_depth 2e3    //[1e3 2e3 3e3 4e3 5e3 6e3 7e3 8e3]
+#define sqrcloud_depth 1e3
+#define vcloud_depth 2e3    //[1e3 2e3 3e3 4e3 5e3 6e3 7e3 8e3] 
 #define vcloud_clip 2e5
-
 #define vcloud_detail 1     //[0 1]
+
 #define vcloud_coverage 0.1 //[-0.5 -0.4 -0.3 -0.2 -0.1 0.0 0.1 0.2 0.3 0.4 0.5]
 
+#ifdef SQUARE_CLOUDS
+const float vc_size         = 0.00035;
+#else
 const float vc_size         = 0.0010;
+#endif
+
+#ifdef SQUARE_CLOUDS
+const float vc_highedge     = vcloud_alt + sqrcloud_depth;
+#else
 const float vc_highedge     = vcloud_alt + vcloud_depth;
+#endif
+
 
 float vcloud_time   = frametime * 0.5;
 
 float vcloud_shape(vec3 pos) {
     float altitude      = pos.y;
 
+    #ifdef SQUARE_CLOUDS
+    float erode_low     = 1.0-sstep(altitude, vcloud_alt, vcloud_alt+sqrcloud_depth*0.16);
+    float erode_high    = sstep(altitude, vcloud_alt+sqrcloud_depth*0.16, vc_highedge);
+    float fade_low      = sstep(altitude, vcloud_alt, vcloud_alt+sqrcloud_depth*0.075);
+    float fade_high     = 1.0-sstep(altitude, vcloud_alt+sqrcloud_depth*0.65, vc_highedge);
+    #else
     float erode_low     = 1.0-sstep(altitude, vcloud_alt, vcloud_alt+vcloud_depth*0.16);
     float erode_high    = sstep(altitude, vcloud_alt+vcloud_depth*0.16, vc_highedge);
     float fade_low      = sstep(altitude, vcloud_alt, vcloud_alt+vcloud_depth*0.075);
     float fade_high     = 1.0-sstep(altitude, vcloud_alt+vcloud_depth*0.65, vc_highedge);
+    #endif
 
     vec3 wind       = vec3(vcloud_time, 0.0, vcloud_time*0.6);
 
@@ -160,7 +185,11 @@ float vcloud_shape(vec3 pos) {
 
     float coverage_bias = 0.52 - wetness*0.3 - vcloud_coverage;
 
+    #ifdef SQUARE_CLOUDS
+    float coverage  = noise_2d_sqrcld(pos.xz*0.028).b;
+    #else
     float coverage  = noise_2d(pos.xz*0.028).b;
+    #endif
         coverage    = (coverage - coverage_bias) * rcp(1.0 - saturate(coverage_bias));
 
         coverage   *= fade_low;
@@ -171,13 +200,22 @@ float vcloud_shape(vec3 pos) {
         coverage    = saturate(coverage * 1.1);
         
     if (coverage <= 0.0) return 0.0;
+    
+    #ifdef SQUARE_CLOUDS
+    float wfade     = sstep(altitude, vcloud_alt, vcloud_alt+sqrcloud_depth*0.33)*0.5+0.5;
 
+    float dfade     = 0.01 + sstep(altitude, vcloud_alt, vcloud_alt+sqrcloud_depth*0.2)*0.2;
+        dfade      += sstep(altitude, vcloud_alt+sqrcloud_depth*0.1, vcloud_alt+sqrcloud_depth*0.55)*0.65;
+        dfade      += sstep(altitude, vcloud_alt+sqrcloud_depth*0.2, vcloud_alt+sqrcloud_depth*0.65)*3.0;
+        dfade      += sstep(altitude, vcloud_alt+sqrcloud_depth*0.4, vc_highedge-sqrcloud_depth*0.15)*2.0;
+    #else 
     float wfade     = sstep(altitude, vcloud_alt, vcloud_alt+vcloud_depth*0.33)*0.5+0.5;
 
     float dfade     = 0.01 + sstep(altitude, vcloud_alt, vcloud_alt+vcloud_depth*0.2)*0.2;
         dfade      += sstep(altitude, vcloud_alt+vcloud_depth*0.1, vcloud_alt+vcloud_depth*0.55)*0.65;
         dfade      += sstep(altitude, vcloud_alt+vcloud_depth*0.2, vcloud_alt+vcloud_depth*0.65)*3.0;
         dfade      += sstep(altitude, vcloud_alt+vcloud_depth*0.4, vc_highedge-vcloud_depth*0.15)*2.0;
+    #endif
 
     float shape     = coverage;
     float slope     = sqrt(1.0 - saturate(shape));
@@ -189,8 +227,10 @@ float vcloud_shape(vec3 pos) {
     if (shape <= 0.0) return 0.0;
 
     #if vcloud_detail >= 1
+        #ifndef SQUARE_CLOUDS
         slope      = sqrt(1.1 - saturate(shape));
         shape      -= value_3d(pos * 24.0) * 0.15 * slope;
+        #endif
     #endif
 
     return max(shape * dfade, 0.0);
@@ -199,7 +239,12 @@ float vcloud_shape(vec3 pos) {
 uniform vec3 cloud_lvec;
 
 float vcloud_light(vec3 pos, vec3 dir, const int steps, float upmix) {
+    #ifdef SQUARE_CLOUDS
+    float stepsize  = sqrcloud_depth / steps;
+    #else 
     float stepsize  = vcloud_depth / steps;
+    #endif
+
         stepsize   *= 1.0 - upmix * 0.9;
 
     float density   = 0.0;
@@ -225,7 +270,11 @@ vec4 compute_vcloud(vec3 wvec) {
 
         float dither = dither_bluenoise();
 
+        #ifdef SQUARE_CLOUDS
+        const float bl  = sqrcloud_depth / vcloud_samples;
+        #else
         const float bl  = vcloud_depth / vcloud_samples;
+        #endif
         float stepl     = length((epos-spos)/vcloud_samples);
         float stepcoeff = stepl/bl;
             stepcoeff   = 0.45+clamp(stepcoeff-1.1, 0.0, 4.0)*0.5;
