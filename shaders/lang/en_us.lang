@@ -54,7 +54,7 @@ screen.Terrain=Waving Blocks
 screen.World=World
 
 #Settings
-option.About=PBSL v7.1.04.1
+option.About=PBSL v7.1.04.1 edited
 value.About.0=Pee Bee Arr
 
 #Visual
@@ -282,9 +282,12 @@ option.WeatherVaried=Per Biome Weather
 
 #Sky
 #   Clouds
+option.SQUARE_CLOUDS=Square Clouds
+option.SQUARE_CLOUDS.comment=WIP!
 option.vcloud_samples=Samples
 option.vcloud_alt=Altitude
 option.vcloud_depth=Thickness
+option.sqrcloud_depth=Square cloud thickness
 option.vcloud_detail=Detail
 value.vcloud_detail.0=Low
 value.vcloud_detail.1=High
