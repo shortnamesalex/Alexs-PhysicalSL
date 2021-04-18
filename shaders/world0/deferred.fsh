@@ -227,8 +227,10 @@ float vcloud_shape(vec3 pos) {
     if (shape <= 0.0) return 0.0;
 
     #if vcloud_detail >= 1
+        #ifndef SQUARE_CLOUDS
         slope      = sqrt(1.1 - saturate(shape));
         shape      -= value_3d(pos * 24.0) * 0.15 * slope;
+        #endif
     #endif
 
     return max(shape * dfade, 0.0);
