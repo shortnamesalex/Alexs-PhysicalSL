@@ -35,7 +35,7 @@ void main(){
 
     #ifdef Clouds
     float scenedepth    = texture2D(depthtex0, texcoord).x;
-
+    
     const float cLOD    = sqrt(CloudRenderLOD);
     vec2 cloudcoord     = (texcoord)*rcp(cLOD)+vec2(1.0-rcp(cLOD), 0.0);
     if (!landMask(scenedepth)) {

@@ -393,6 +393,7 @@ vec3 view_scenespace(vec3 viewpos) {
 }
 
 void main(){
+    #ifdef CloudRenderLOD
     const float cLOD    = sqrt(CloudRenderLOD);
 
     vec2 scalecoord  = (texcoord-vec2(1.0-rcp(cLOD), 0.0))*cLOD;
@@ -409,6 +410,7 @@ void main(){
         vec3 svec       = normalize(scenepos);
 
         return1     = compute_vcloud(svec);
+    #endif
     }
 
     #ifdef Clouds
