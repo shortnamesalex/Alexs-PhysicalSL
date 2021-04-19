@@ -345,6 +345,7 @@ option.WorldCurvatureSize=World Curvature Size
 option.WorldTimeAnimation=World Time Animation
 option.AnimationSpeed=Animation Speed
 option.SoftParticle=Soft Particles
+option.CloudRenderLOD= Cloud LOD
 
 value.DesaturationFactor.2.0=Very Low
 value.DesaturationFactor.1.5=Low
@@ -429,6 +430,7 @@ option.CloudsHeight.comment=Adjusts cloud height.
 option.CloudOpacity.comment=Adjusts cloud opacity.
 option.CloudSpeed.comment=Adjusts cloud speed.
 option.CloudBrightness.comment=Adjusts cloud brightness.
+option.CloudRenderLOD.comment=Adjusts the level of detail on volumetric clouds. (Please do not raise this higher than 15.0 or you'll literally start inhaling LSD)
 
 option.WaterVanilla.comment=Use vanilla water texture.
 option.SkyVanilla.comment=Use vanilla sky color.
