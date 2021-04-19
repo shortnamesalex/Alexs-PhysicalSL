@@ -141,7 +141,7 @@ float cloud_phase(float cos_theta, float g) {
 
 #define vcloud_samples 70   //[20 30 40 50 60 70 80 90 100]
 #define vcloud_alt 1e3      //[3e2 4e2 5e2 6e2 7e2 8e2 9e2 1e3 2e3 3e3 4e3]
-#define sqrcloud_depth 1e3
+#define sqrcloud_depth 1e3  //[1e3 2e3 3e3 4e3 5e3 6e3 7e3 8e3]
 #define vcloud_depth 2e3    //[1e3 2e3 3e3 4e3 5e3 6e3 7e3 8e3] 
 #define vcloud_clip 2e5
 #define vcloud_detail 1     //[0 1]
@@ -149,7 +149,7 @@ float cloud_phase(float cos_theta, float g) {
 #define vcloud_coverage 0.1 //[-0.5 -0.4 -0.3 -0.2 -0.1 0.0 0.1 0.2 0.3 0.4 0.5]
 
 #ifdef SQUARE_CLOUDS
-const float vc_size         = 0.00035;
+const float vc_size         = 0.00030;
 #else
 const float vc_size         = 0.0010;
 #endif
@@ -160,8 +160,11 @@ const float vc_highedge     = vcloud_alt + sqrcloud_depth;
 const float vc_highedge     = vcloud_alt + vcloud_depth;
 #endif
 
-
+#ifdef SQUARE_CLOUDS
+float vcloud_time   = frametime * 0.2;
+#else
 float vcloud_time   = frametime * 0.5;
+#endif
 
 float vcloud_shape(vec3 pos) {
     float altitude      = pos.y;
