@@ -9,3 +9,7 @@
 **Dirty lens textures:**
 - https://github.com/Unity-Technologies/PostProcessing/tree/v2/PostProcessing/Textures/Lens%20Dirt
 - https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/tree/master/Assets/SE%20Natural%20Bloom/Lens%20Textures
+
+**Square clouds:**
+
+- Uvraj
