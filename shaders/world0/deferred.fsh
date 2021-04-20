@@ -148,11 +148,11 @@ float cloud_phase(float cos_theta, float g) {
 
 #define vcloud_coverage 0.1 //[-0.5 -0.4 -0.3 -0.2 -0.1 0.0 0.1 0.2 0.3 0.4 0.5]
 
-#ifdef SQUARE_CLOUDS
-const float vc_size         = 0.00030;
-#else
-const float vc_size         = 0.0010;
-#endif
+
+#define sqrcld_size      0.00030//[0.00020 0.00030 0.00040 0.00050 0.0010 0.0020 0.0030 0.0040 0.0050 0.010 0.020]
+
+#define vc_size          0.0010//[0.00020 0.00030 0.00040 0.00050 0.0010 0.0020 0.0030 0.0040 0.0050 0.010 0.020]
+
 
 #ifdef SQUARE_CLOUDS
 const float vc_highedge     = vcloud_alt + sqrcloud_depth;
@@ -183,7 +183,11 @@ float vcloud_shape(vec3 pos) {
 
     vec3 wind       = vec3(vcloud_time, 0.0, vcloud_time*0.6);
 
+    #ifdef SQUARE_CLOUDS
+    pos            *= sqrcld_size; 
+    #else
     pos            *= vc_size;
+    #endif
     pos            += wind*0.1;
 
     float coverage_bias = 0.52 - wetness*0.3 - vcloud_coverage;
