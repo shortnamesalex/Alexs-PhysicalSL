@@ -13,3 +13,4 @@
 **Square clouds:**
 
 - Uvraj
+- Minecraft's cloud.png (used as the noise texture for square clouds.)
