@@ -4,6 +4,8 @@
 - Original creator of PSL: RRe36
 - Editor: shortnamesalex
 
+**Disclaimer:** Use the latest Optifine preview for square clouds to show up properly!
+
 # Credits:
 
 **Dirty lens textures:**
